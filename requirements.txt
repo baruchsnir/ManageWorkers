@@ -36,7 +36,6 @@ djongo==1.3.2
 dnspython==1.16.0
 falcon==2.0.0
 filelock==3.0.12
-Flask==1.1.1
 future==0.18.2
 gunicorn==20.0.4
 html-testRunner==1.2.1
