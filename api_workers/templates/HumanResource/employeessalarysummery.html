@@ -1,0 +1,81 @@
+<head>
+    <title>Employees Salary Summery</title>
+</head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: center;
+}
+salary{
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+{% extends '../base.html' %}
+{% load static %}
+{% static "images" as baseurl %}
+{% block content %}
+        <script>
+           function  onChangeyear() {
+            var action_src = '/HumanResource/salarysummery/?year=' + document.getElementById("years").value;
+            window.location = action_src;
+       }
+        </script>
+<div style="margin-top:5px; margin-left:160px"><a style="color: red;"><h1>Employees Salary Summery</h1></a>
+    <div><h3>Years</h3>
+    <select id="years"  onChange="javascript:onChangeyear();">
+            {% for y in yearslist %}
+                {% if y == years %}
+                    <option selected value="{{ y }}">{{ y }}</option>
+                {% else %}
+                   <option value="{{ y }}">{{ y }}</option>
+                {% endif %}
+            {% endfor %}
+    </select>
+
+</div>
+</div>
+<div class="articlees" style="margin-top:20px; margin-left:150px;">
+    <div>
+    </div>
+    <table class="tblhw6">
+        <col width="500">
+        <tr class="title"><th>Total Employees - {{ TotalEmployees }}</th></tr>
+        <tr class="title"><th>Total Employees Budget - {{ TotalBudget }}</th></tr>
+        <tr class="title"><th>Average Salary - {{ avaregesalary }}</th></tr>
+         <tr class="title" style="text-align: center;"><th>Salary Raise Expectations for Seniority of {{ years }} Years</th></th>
+        </tr>
+        <tr><td>
+            <table class="salary">
+                <col width="120" style="border: 0px;"><col width="200"><col width="90"><col width="90">
+                <tr>
+                    <td><b>ID</b></td>
+                    <td style="text-align: left;padding: 8px;"><b>Name</b></td>
+                    <td><b>Salary</b></td>
+                    <td><b>Raise</b></td>
+                </tr>
+            {% if employelist %}
+            {% for line in employelist %}
+               <a></a>
+                <tr>
+                    <td><a>{{ line.id }}</a></td>
+                    <td style="text-align: left;padding: 8px;"><a>{{ line.name }}</a></td>
+                    <td><a>{{ line.salary }}</a></td>
+                    <td><a>{{ line.add }}</a></td>
+                </tr>
+
+            {% endfor %}
+                  <tr>
+                    <td colspan="2"></td><td><b>Total :</b></td><td><b>{{ raisetotal }}</b></td>
+                </tr>
+            {% endif %}
+            </table>
+        </td></tr>
+    </table>
+    </div>
+</div>
+{% endblock %}

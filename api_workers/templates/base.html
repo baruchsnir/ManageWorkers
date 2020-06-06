@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Human Resource</title>
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet" id="bootstrap-css">
+    <link href="{% static '/css/navbar.css' %}" rel="stylesheet">
+    <script src="{% static '/js/jquery-1.10.2.min.js.download' %}"></script>
+    <script src="{% static '/js/bootstrap.min.js.download' %}"></script>
+    <link href="{% static '/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static '/css/bootstrap-social.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/base.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static '/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static '/css/navbuttons.css' %}">
+<!--    <link rel="stylesheet" type="text/css" href="{% static '/css/index.css' %}">-->
+<!--    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">-->
+	<!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="{% static '/images/icons/favicon.ico' %}">
+<!--===============================================================================================-->
+    <style type="text/css"></style>
+</head>
+
+<body style="background-color:#FFFFFF;">
+<nav class="navbar navbar-default navbar-inverse" role="navigation" style="margin-bottom: 0">
+    <div class="container-fluid">
+        <div class="navbar-header">
+<!--            <a class="navbar-brand" href="/"><img src="{% static '/images/imdb_logo.png' %}"></a>-->
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div><img class="navbar-brand" src="{% static '/images/workers.png' %}" href="/">
+             <a class="navbar-brand" href="/HumanResource/"><span class="glyphicon glyphicon-home"></span> Home</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/HumanResource/workers_list/"><span class="glyphicon glyphicon-user"></span> Workers</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="{% url 'HumanResource:search' %}" method="GET" value="{{request.GET.q}}">
+                {% csrf_token %}
+
+                <input type="text" name="q" id=" " class="form-control"
+                       placeholder="Search Worker" value="{{request.GET.q}}"
+                       onkeyup="start_timer()" size="55" autocomplete="off" required/>
+                <input type="submit" name="submit" value="Search" class="btn btn-default"/>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li>
+                        {% if user.is_superuser %}
+                        <li><a href="/HumanResource/salarysummery/">Salary Summery</a></li>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <p class="navbar-text" style="color:#fff9fe;">
+                            Welcome, {{ user.username }}</p></li>
+                    {% if user.is_superuser %}
+                    {% endif %}
+                 <li style="align-items: center">
+                        <a href="/accounts/logout/">Logout</a>
+                    </li>
+                {% else %}
+                    {% if message %}
+                        <li><p class="navbar-text" style="color:red;">{{ message }}</p></li>
+<!--                <a href="#" onclick="document.getElementById('logoutform').submit()"><button type="button">Log Out</button></a>-->
+                    {% endif %}
+                    	<li><a href="/accounts/register/">Register</a></li>
+						<li><a href="/accounts/login/">Login</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+    {% if showuserspictures %}
+    <div class="row">
+  <div class="column">
+    <div class="card">
+      <img src="{% static '/images/yuga.jfif' %}" >
+    </div>
+  </div>
+
+    <div class="row_img col-sm-12">
+    <table>
+        <tr>
+            <td>
+                <img src="{% static '/images/hightech1.jfif' %}" >
+            </td>
+            <td>
+                <img src="{% static '/images/hightech2.jfif' %}" >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="{% static '/images/hightech3.jfif' %}" >
+            </td>
+            <td>
+                <img src="{% static '/images/hightech4.jfif' %}" >
+            </td>
+        </tr>
+                <tr>
+            <td>
+                <img src="{% static '/images/hightech5.jfif' %}" >
+            </td>
+            <td>
+                <img src="{% static '/images/hightech6.jfif' %}" >
+            </td>
+        </tr>
+    </table>
+  <div class="column">
+    <div class="card">
+      <img src="{% static '/images/craftsmenworkes.jfif' %}" >
+    </div>
+  </div>
+    </div>
+{% endif %}
+</nav>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+</script>
+<script>
+    function searchSubmit() {
+        var action_src = '/HumanResource/search/?q=' + document.getElementById('search-input').value ;
+        alert(document.getElementById("search-input").value)
+        window.location  = action_src;
+    }
+
+    $(".form-control").bind('blur', function () {
+        setTimeout(function () {
+            $(".searchlistdiv").hide();
+        }, 150);
+    });
+    var last_input_time = Date.now();
+
+    function start_timer() {
+        var this_input_time = Date.now();
+        last_input_time = this_input_time;
+        setTimeout(
+            function (this_input_time) {
+                if (last_input_time === this_input_time)
+                    str = document.getElementById('search-input').value
+                    showResult(str);
+            }, 150, this_input_time);
+    }
+
+    function showResult(str) {
+        if (str.length === 0) {
+            $(".searchlistdiv").hide();
+            return;
+        }
+        var path = "/HumanResource/search/?q=" + str;
+        window.location  = path;
+        });
+    }
+</script>
+<div class="wrapper">
+  {% block content %}
+  {% endblock %}
+</div>
+</body>
+</html>

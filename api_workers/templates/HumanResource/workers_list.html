@@ -1,0 +1,158 @@
+<head>
+    <title>Workers List</title>
+</head>
+{% extends '../base.html' %}
+{% load static %}
+{% block content %}
+<table id="back2Top" style="display: inline;">
+  <col width="20"><col width="20"><col width="20"><col width="20"><col width="20">
+  <tr>
+      <td></td>
+      <td></td>
+      <td><a title="Back to top" href="/HumanResource/workers_list.html/?page={{ current_page }}&department={{department}}" alt="Top"><img border="0" src="{% static '/images/top.jpg' %}" alt="Next" width="20" height="20"></a></td>
+      <td></td>
+      <td></td>
+  </tr>
+    {% if page_number > 1 %}
+       <tr>
+         {% if current_page != 1 %}
+         <td>
+           <a title="First" href="/HumanResource/workers_list.html/?page=1" style="display: inline;"><img border="0" src="{% static '/images/first.jpg' %}" alt="First" width="20" height="20"></a>
+         </td>
+         <td>
+            <a title="Previous" href="/HumanResource/workers_list.html/?page={{ current_page|add:-1 }}&department={{department}}" alt="Previous" style="display: inline;"><img border="0" src="{% static '/images/previous.jpg' %}" alt="Next" width="20" height="20"> </a>
+         </td>
+         {% else %}
+                 <td></td>
+                 <td></td>
+         {% endif %}
+      <td>
+     </td>
+         {% if current_page != page_number %}
+         <td><a  title="Next" href="/HumanResource/workers_list.html/?page={{ current_page|add:1 }}&department={{department}}" style="display: inline;"><img border="0" src="{% static '/images/next.jpg' %}" alt="First" width="20" height="20"></a>
+         </td>
+          <td>
+              <a   title="Last" href="/HumanResource/workers_list.html/?page={{ page_number }}&department={{department}}" style="display: inline;"><img border="0" src="{% static '/images/last.jpg' %}" alt="First" width="30" height="20"></a>
+         </td>
+         {% else %}
+                 <td width="30" height="30"></td>
+                 <td width="30" height="30"></td>
+        {% endif %}
+    </tr>
+    {% endif %}
+ </table>
+    <div id="container" style="margin-left: 1%;">
+
+        <div style="margin-left: 1%;">
+        <table>
+        <div>
+            <ul class="navbar-nav selectdepartment collapse navbar-collapse" style="background-color: #4AA0E0;">
+
+        {% if departments %}
+              <li class="selectdepartment"  height="20" width="70">Department : </li>
+              <li>      <select id="department" name="selectdepartment" onChange="javascript:onSelectbtn();">
+                        {% for y in departments %}
+                            {% if department == y %}
+                                <option selected value="{{ y }}">{{     y }}</option>
+                            {% else %}
+                               <option value="{{ y }}">{{ y }}</option>
+                            {% endif %}
+
+                        {% endfor %}
+                        </select>
+              </li>
+
+        {% endif %}
+        {% if departments %}
+        <li class="selectdepartment glyphicon glyphicon-user" width="70" >
+                <li><button id="btnSelect" onclick="onSelectbtn();" class="btn_select">Select</button></li>
+        </li>
+        {% endif %}
+        </ul>
+        </div>
+        <div style="margin-top:10px; margin-left:10px;">
+        {% for item in items %}
+           {% if forloop.first %}
+              <tr>
+           {% endif %}
+             <td>
+            <table class="tblmovbie" >
+
+                <col width="30"><col width="200"><col width="30">
+                <tr>
+                <td>        </td>
+                <td>
+                    <a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}" target="_self">
+                        <img class="img-rounded" border="0" src="{{ item.picture }}" alt="Cannot load photo, sorry!" width="160" height="180"></a>
+                 </td>
+                <td></td>
+                </tr>
+                <tr style="background-color:#FFFFFF;">
+                <td style="vertical-align: top;text-align: left;padding: 0px;" width="125" height="170" colspan="2">
+                    <div style="margin-left:20px;margin-top:10px;">
+
+                    <a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}"
+                           target="_self">
+                        <table>
+                            <tr class="worker_name">
+                             <h4><b> {{ item.name }}</b></h4>
+                            </tr>
+                        <tr>
+                               <li><a><b><span>Department : </span></b> </a></li>
+                            <li><a>  {{ item.department_name }}</a></li>
+                        </tr>
+                        <tr><b>Jobs :</b></tr>
+<!--                        <tr>{{ item.job_id }}</tr>-->
+                        <tr>
+                            <ul>
+                        {% for y in item.job_id %}
+                           <li>{{ y }}</li>
+                        {% endfor %}
+                            </ul>
+                        </tr>
+                        </table></a>
+                    </div>
+
+                </td>
+                </tr>
+            </table>
+            <hr>
+             </td>
+            {% if forloop.counter|divisibleby:workers_in_line %}
+                </tr>
+            {% endif %}
+
+        {% endfor %}
+        </div>
+        </table>
+        </div>
+        {% if pages %}
+           {% if page_number > 1 %}
+                <p>You are in the {{ current_page }} page, {{ page_number }} pages in total</p>
+                {% for page in pages %}
+                    {% if page == current_page %}
+                        <b>{{ page }}</b>
+                    {% else %}
+                        <a href="/HumanResource/workers_list.html/?page={{ page }}&department={{department}}" target="_self">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+
+        <script>
+            $(function () {
+                $('span.stars').stars();
+            });
+            $.fn.stars = function () {
+                return $(this).each(function () {
+                    $(this).html($('<span />').width(Math.max(0, (Math.min(10, parseFloat($(this).html())))) * 8));
+                });
+            }
+           function  onSelectbtn() {
+            var action_src = '/HumanResource/workers_list/?department=' + document.getElementById("department").value;
+            window.location = action_src;
+       }
+        </script>
+    </div>
+    </div>
+{% endblock %}

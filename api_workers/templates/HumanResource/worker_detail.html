@@ -1,0 +1,215 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block content %}
+<style>
+/* Popup container - can be anything you want */
+.popuptext{
+  width: 260px;
+  height : 200px;
+  max-height: 300px;
+<!--  text-align: auto;-->
+}
+.txtjson{
+  background-color: #555;
+  color: #fff;
+
+}
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-bottom: 1px dotted black;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 5%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+</style>
+    <div class="Layer" id="layer"></div>
+    <div id="container" style=background-color:#FFFFFF;" >
+        {% if worker %}
+            <div id="detail-infro" style="margin-left:20px;margin-top:0px;">
+                <h1>{{ worker.name }}</h1>
+                {#  <div class="Layer" id="layer"></div>#}
+                <p><b>Email:</b><a href="mailto:{{ worker.email }}?subject='HTML link'">{{ worker.email }}</a> </p>
+                  <p><b>Emploee Id:</b> {{ worker.emploee_id }}</p>
+                <p><b>Phone Number:</b> {{ worker.phone_number }} </p>
+                <p><b>Hire_date:</b> {{ worker.hire_date }}</p>
+                <p><b>Job Title:</b></p>
+                <p>
+                    <table>
+                        <col width="60"><col width="150">
+                        <tr><td>      </td>
+                            <td>
+                           {% for y in worker.job_id %}
+                           <li>{{ y }}</li>
+                        {% endfor %}
+                            </td>
+                        </tr>
+                        </table>
+                </p>
+                <p><b>Manager:</b> {{ worker.manager_name }}</p>
+                <p><b>Department:</b> {{ worker.department_name }}</p>
+                {% if user.is_superuser %}
+                <p><b>Salary:</b> {{ worker.salary }}</p>
+                <p><b>Commission Pct:</b> {{ worker.commission_pct }}</p>
+                {% endif %}
+                <table>
+            <tr>
+            <td>
+                <div class="popup" onclick="myFunction()">Show Detail in Json!...
+                  <div class="popuptext" id="myPopup">
+                      <textarea class="txtjson" id="w3mission" rows="20" cols="50">
+{{worker.emploee_json}}
+                    </textarea>
+                      </div>
+<!--                  <a class="jsondata" id="jsondata_id" style="visibility: hidden;">{{worker.emploee_json}}</a>-->
+<!--                  <a class="popuptext" id="myPopup">{{worker.emploee_json}}</a>  -->
+                </div>
+             </td>
+            </tr>
+        </table>
+                </p>
+            </div>
+
+            <div id="main-pic" >
+                <img border="0" src="{{ worker.picture }}" alt="Cannot load photo, sorry!" class="img_center" width="250" height="300" >
+            </div>
+             {% if employees %}
+             <div style="margin-left:30px;">
+
+                 <h2>All Managed Employees:</h2>
+             </div>
+            <div style="margin-top:30px; margin-left:10px;">
+            <table>
+             {% for item in employees %}
+              {% if forloop.first %}
+              <tr>
+               {% endif %}
+               <td>
+               <table class="tblemployee" >
+
+                <col width="30"><col width="200"><col width="30">
+                <tr>
+                <td>        </td>
+                <td>
+                    <a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}" target="_self">
+                        <img class="img-rounded" border="0" src="{{ item.picture }}" alt="Cannot load photo, sorry!" width="160" height="180"></a>
+                 </td>
+                <td></td>
+                </tr>
+                <tr style="background-color:#FFFFFF;">
+
+                <td style="vertical-align: top;text-align: left;padding: 0px;" width="125" height="170" colspan="2">
+                    <div style="margin-left:20px;margin-top:10px;">
+                    <a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}"
+                           target="_self">
+
+                        <table >
+                            <tr class="worker_name">
+                             <h4><b> {{ item.name }}</b></h4>
+                            </tr>
+                        <tr>
+                            <li><a><b><span>Department : </span></b> </a></li>
+                            <li><a>  {{ item.department_name }}</a></li>
+                        </tr>
+                        <tr><b>Jobs :</b></tr>
+                        <tr>
+                            <ul>
+                        {% for y in item.job_id %}
+                           <li>{{ y }}</li>
+                        {% endfor %}
+                            </ul>
+                        </tr>
+                        </table></a>
+                    </div>
+                </td>
+
+                </tr>
+            </table>
+            <hr>
+             </td>
+            {% if forloop.counter|divisibleby:workers_in_line %}
+                </tr>
+            {% endif %}
+
+           {% endfor %}
+           </table>
+            </div>
+
+            {% endif %}
+            <hr>
+        {% endif %}
+
+
+
+        {% for item in items %}
+            <table>
+                <td>
+                    <a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}" target="_self"><img border="0" src="{{ item.picture }}" alt="Cannot load photo, sorry!" width="220" height="280"
+                                                                                             style="padding: 10px"></a>
+                </td>
+                <td>
+                    <h3><a href="/HumanResource/worker_detail/?id={{ item.emploee_id }}" target="_self">{{ item.name }}</a></h3>
+                </td>
+            </table>
+            <hr>
+        {% endfor %}
+        <script>
+        // When the user clicks on div, open the popup
+        function myFunction() {
+<!--          var data = document.getElementById('jsondata_id').value-->
+          var popup = document.getElementById('myPopup');
+<!--          popup.innerHTML = data-->
+          popup.classList.toggle("show");
+        }
+        </script>
+
+    </div>
+{% endblock %}
+
